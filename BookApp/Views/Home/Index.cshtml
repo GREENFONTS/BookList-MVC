@@ -1,0 +1,255 @@
+﻿@{
+    ViewData["Title"] = "BookList";
+
+}
+@model IEnumerable<Book>
+  
+<style>
+    #BookList{
+  margin: 10px;
+  padding: 7px;
+  border-radius: 4px;
+  border: 2px solid #880E4F;
+  box-shadow: 3px 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  color: #880E4F;
+  font-weight: 500;
+  font-size: 20px;
+  list-style: none;
+  width: fit-content;
+}
+
+</style>
+
+
+<div>
+    <div class="text-center">
+    <h1 class="display-4">My BookList</h1>
+</div>
+
+<div style="display: flex; justify-content: space-between;" >
+    <div style="width: 50%;">
+        <div>
+            @if(@ViewBag.book){
+                @if(Model != null){
+                     @foreach(var obj in Model){
+              <div id="BookList" class="d-inline-block">
+                <div class="row">
+                       <span class="text-dark col-8" onclick="GetBook('@obj.Name', '@obj.Author','@obj.Genre','@obj.Description')">@obj.Name</span>
+                  <span class="UpdateModal col-2" onclick="UpdateHandler('@obj.Id', '@obj.Name', '@obj.Author','@obj.Genre','@obj.Description')">
+                      <i class="bi bi-pencil-square " ></i></span>
+
+             
+                   <i class="bi bi-trash-fill col-2" onclick="DeleteHandler('@obj.Id')" ></i>
+                 
+                                                                
+                 
+                </div>
+
+                 
+                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="container p-3">
+        
+                    <h3>No Books....</h3>
+                    </div>
+                    }
+         
+
+                    }
+            else{
+                 <div class="container p-3">
+        
+                    <h3>No Books....</h3>
+                    </div>
+            }
+     
+        </div>
+
+        <div>
+            @using(Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+   
+        <div class="form-group">
+            <div>
+                <label for="name">Title:</label>
+            </div>
+            
+            <input type="text" name="name" class="form-control" />
+        </div>
+        
+        <div class="form-group">
+            <div>
+                <label>Genre:</label>
+            </div>
+            
+            <input type="text" name="genre" class="form-control" />
+        </div>
+        <div class="form-group">
+            <div>
+                <label for="author">Author:</label>
+            </div>            
+            <input type="text" name="author" class="form-control" />
+        </div>
+
+
+         <div class="form-group">
+             <div>
+                  <label for="description">Description</label>
+             </div>
+           
+            <textarea rows="4" name="description" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group mt-3">
+             <button class="btn" style="background-color: purple; color:white;" type="submit" value="submit">Add Book</button>
+            </div>}
+        </div>
+        
+       
+    </div>
+
+
+
+<div style="width: 40%; height:contain; background-color: purple" class="text-light p-2 mt-3">
+ 
+        <div class="p-2 d-none" id="bookDetails">
+            <div class="p-2 mb-3">
+                <h3 id="Name"> </h3>
+            </div>
+            
+            <div class="mb-3">
+             <span class="mr-3">Genre: </span>    <span id="Genre">  </span>
+            </div>
+
+            <div class="mb-3">
+             <span class="mr-3">Author: </span>    <span id="Author">  </span>
+            </div>
+
+            <div class="mb-3">
+             <span class="mr-3">Description: </span>    <span id="Description">  </span>
+            </div>
+           
+           
+           
+        </div>
+   
+       <div class="p-3" id="NoBooks">
+           <h3>No Book Selected...</h3></div>
+   
+</div>
+
+ <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="exampleModal" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Update Book</h5>
+                          </div>
+                          <div class="modal-body">
+                                                                @using(Html.BeginForm("UpdateBook", "Home", FormMethod.Post))
+                               
+                                                                {
+
+                               <div class="form-group d-none">
+                                <div>
+                                    <label for="id">id:</label>
+                                </div>
+            
+                                <input type="text" name="id" id="idInput" class="form-control" />
+                            </div>
+   
+                            <div class="form-group">
+                                <div>
+                                    <label for="name">Title:</label>
+                                </div>
+            
+                                <input type="text" name="name" id="nameInput" class="form-control" />
+                            </div>
+        
+                            <div class="form-group">
+                                <div>
+                                    <label>Genre:</label>
+                                </div>
+            
+                                <input type="text" name="genre" id="genreInput" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <label for="author">Author:</label>
+                                </div>            
+                                <input type="text" name="author" id="authorInput" class="form-control" />
+                            </div>
+
+                             <div class="form-group">
+                                 <div>
+                                      <label for="description">Description</label>
+                                 </div>
+           
+                                <textarea rows="4" name="description" id="descriptionInput" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                 <button class="btn" style="background-color: purple; color:white;" type="submit" value="submit">Update Book</button>
+                                  <button type="button" class="btn btn-secondary" id="modalClose">Close</button>
+                                </div>
+
+           
+                                }
+                               </div>
+                             </div>
+                        </div>
+                        </div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    
+$(document).ready(() => {
+
+    $.inputId = (id, name, author, genre, description) => {
+        $("#idInput").attr('value', id);
+        $("#nameInput").attr('value', name);
+         $("#authorInput").attr('value', author);
+         $("#genreInput").attr('value', genre);
+          $("#descriptionInput").val(description);
+
+            $("#exampleModal").modal('show');
+       
+    }
+    $.GetBook = (name, author, genre, description) => {
+        $("#NoBooks").addClass("d-none");
+        $("#bookDetails").removeClass("d-none");
+         $("#Name").text(name);
+         $("#Author").text(author);
+        $("#Genre").text(genre);
+         $("#Description").text(description);
+    }
+
+    $("#modalclose1").click(() => {
+        $("#exampleModal").modal('hide');
+    });
+    $("#modalClose").click(() => {
+        $("#exampleModal").modal('hide');
+    });
+});
+
+function UpdateHandler(id, name, author, genre, description){
+   $.inputId(id, name, author, genre, description);
+};
+
+function DeleteHandler(id){
+    $.post(`/Home/DeleteBook/${id}`);
+}
+
+
+function GetBook(name, author, genre, description){
+    $.GetBook(name, author, genre, description);
+}
+    </script>
+
+
